@@ -1,0 +1,1 @@
+delete from your_table_name;
