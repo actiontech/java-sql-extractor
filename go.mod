@@ -1,4 +1,4 @@
-module actiontech.cloud/sqle/java-antlr
+module github.com/actiontech/java-sql-extractor
 
 go 1.19
 

@@ -3,7 +3,7 @@ package parser
 import (
 	"github.com/antlr4-go/antlr/v4"
 
-	javaAntlr "actiontech.cloud/sqle/java-antlr/java_antlr"
+	javaAntlr "github.com/actiontech/java-sql-extractor/java_antlr"
 )
 
 type JavaVisitor struct {

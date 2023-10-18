@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"actiontech.cloud/sqle/java-antlr/parser"
+	"github.com/actiontech/java-sql-extractor/parser"
 )
 
 func getJavaFiles() []string {

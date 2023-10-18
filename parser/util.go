@@ -3,7 +3,7 @@ package parser
 import (
 	"strings"
 
-	javaAntlr "actiontech.cloud/sqle/java-antlr/java_antlr"
+	javaAntlr "github.com/actiontech/java-sql-extractor/java_antlr"
 )
 
 func getValueFromVariables(variableName string, variables []*Variable) (string, bool) {

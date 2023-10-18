@@ -5,7 +5,7 @@ import (
 	// "github.com/antlr4-go/antlr/v4"
 	"os"
 
-	parser "actiontech.cloud/sqle/java-antlr/parser"
+	parser "github.com/actiontech/java-sql-extractor/parser"
 	// mysqlParser "anltrexample/parser/mysql"
 	"fmt"
 )

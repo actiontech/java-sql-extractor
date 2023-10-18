@@ -1,7 +1,7 @@
 package parser
 
 import (
-	javaAntlr "actiontech.cloud/sqle/java-antlr/java_antlr"
+	javaAntlr "github.com/actiontech/java-sql-extractor/java_antlr"
 
 	"github.com/antlr4-go/antlr/v4"
 )
