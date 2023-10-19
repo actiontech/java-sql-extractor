@@ -44,7 +44,7 @@ func getSqlsFromSqlFile(sqlFile string) []string {
 	return sqls
 }
 
-func TestJavaFile(t *testing.T) {
+func TestJavaFiles(t *testing.T) {
 	javaFiles := getJavaFiles()
 	for _, file := range javaFiles {
 		sqls, err := GetSqlFromJavaFile(file)
@@ -52,10 +52,26 @@ func TestJavaFile(t *testing.T) {
 			t.Error(err)
 		}
 		sqlFileSqls := getSqlsFromSqlFile(file + ".sql")
+		if len(sqls) != len(sqlFileSqls) {
+			t.Error(fmt.Errorf("sql parser failed, java file: %s", file))
+		}
 		for i, sql := range sqls {
 			if sql != sqlFileSqls[i] {
 				t.Error(fmt.Errorf("sql parser failed, java file: %s", file))
 			}
+		}
+	}
+}
+
+func TestSingleJavaFile(t *testing.T) {
+	sqls, err := GetSqlFromJavaFile("/root/javaexample/test/Test6.java")
+	if err != nil {
+		t.Error(err)
+	}
+	sqlFileSqls := getSqlsFromSqlFile("/root/javaexample/test/Test6.java" + ".sql")
+	for i, sql := range sqls {
+		if sql != sqlFileSqls[i] {
+			t.Error(fmt.Errorf("sql parser failed, java file: %s", "/root/javaexample/test/Test6.java"))
 		}
 	}
 }
