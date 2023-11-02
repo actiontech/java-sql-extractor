@@ -64,14 +64,15 @@ func TestJavaFiles(t *testing.T) {
 }
 
 func TestSingleJavaFile(t *testing.T) {
-	sqls, err := GetSqlFromJavaFile("/root/javaexample/test/Test6.java")
+	javaFile := "/root/javaexample/parser/Test0.java"
+	sqls, err := GetSqlFromJavaFile(javaFile)
 	if err != nil {
 		t.Error(err)
 	}
-	sqlFileSqls := getSqlsFromSqlFile("/root/javaexample/test/Test6.java" + ".sql")
+	sqlFileSqls := getSqlsFromSqlFile(javaFile + ".sql")
 	for i, sql := range sqls {
 		if sql != sqlFileSqls[i] {
-			t.Error(fmt.Errorf("sql parser failed, java file: %s", "/root/javaexample/test/Test6.java"))
+			t.Error(fmt.Errorf("sql parser failed, java file: %s", javaFile))
 		}
 	}
 }
