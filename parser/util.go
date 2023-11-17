@@ -80,7 +80,19 @@ func (f *FuncBlock) getValueFromCallExpr(argumentIndex int) []string {
 					values = append(values, recursionSql...)
 				}
 			} else if arg.RuleIndex == javaAntlr.JavaParserRULE_literal {
-				values = append(values, calledExpr.Content)
+				values = append(values, strings.Trim(arg.Content, "\""))
+				if arg.Symbol == PLUS {
+					var tmpSlice []string
+					nextStrs := getStrValueFromExpression(arg.Next)
+					for _, str := range nextStrs {
+						for _, result := range values {
+							tmpSlice = append(tmpSlice, result+str)
+						}
+					}
+					if len(tmpSlice) > 0 {
+						values = tmpSlice
+					}
+				}
 			}
 		}
 	}
@@ -130,16 +142,41 @@ func getVariableValueFromTree(variableName string, currentNode interface{}) []st
 func GetSqlsFromVisitor(ctx *JavaVisitor) []string {
 	sqls := []string{}
 	for _, expression := range ctx.ExecSqlExpressions {
-		for _, arg := range expression.Arguments {
-			// 参数为变量
-			if arg.RuleIndex == javaAntlr.JavaParserRULE_identifier {
-				sqls = append(sqls, getVariableValueFromTree(arg.Content, expression.Node)...)
-				// 参数为字符串
-			} else if arg.RuleIndex == javaAntlr.JavaParserRULE_literal {
-				// anltr为了区分字符串和其他变量，会为字符串的值左右添加双引号，获取sql时需要去除左右的双引号
-				sqls = append(sqls, strings.Trim(arg.Content, "\""))
+		if len(expression.Arguments) == 0 {
+			continue
+		}
+		arg := expression.Arguments[0]
+		// 参数为变量
+		if arg.RuleIndex == javaAntlr.JavaParserRULE_identifier {
+			sqls = append(sqls, getVariableValueFromTree(arg.Content, expression.Node)...)
+			if arg.Symbol == PLUS {
+				tmpSlice := []string{}
+				nextSqls := getVariableValueFromTree(arg.Next.Content, expression.Node)
+				for _, str := range nextSqls {
+					for _, result := range sqls {
+						tmpSlice = append(tmpSlice, result+str)
+					}
+				}
+				if len(tmpSlice) > 0 {
+					sqls = tmpSlice
+				}
 			}
-
+			// 参数为字符串
+		} else if arg.RuleIndex == javaAntlr.JavaParserRULE_literal {
+			// anltr为了区分字符串和其他变量，会为字符串的值左右添加双引号，获取sql时需要去除左右的双引号
+			sqls = append(sqls, strings.Trim(arg.Content, "\""))
+			if arg.Symbol == PLUS {
+				tmpSlice := []string{}
+				nextSqls := getVariableValueFromTree(arg.Next.Content, expression.Node)
+				for _, str := range nextSqls {
+					for _, result := range sqls {
+						tmpSlice = append(tmpSlice, result+str)
+					}
+				}
+				if len(tmpSlice) > 0 {
+					sqls = tmpSlice
+				}
+			}
 		}
 	}
 

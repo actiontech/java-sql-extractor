@@ -64,7 +64,7 @@ func TestJavaFiles(t *testing.T) {
 }
 
 func TestSingleJavaFile(t *testing.T) {
-	javaFile := "/root/javaexample/test/Test11.java"
+	javaFile := "/root/javaexample/parser/Test0.java"
 	sqls, err := GetSqlFromJavaFile(javaFile)
 	if err != nil {
 		t.Error(err)
