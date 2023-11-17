@@ -8,10 +8,9 @@ import (
 
 var jdbcExecSqlFuncs = []string{"executeQuery", "addBatch", "queryForList", "executeUpdate", "execute", "prepareStatement"}
 
-
 func getStrValueFromExpression(expr *Expression) []string {
 	var results []string
-	
+
 	if expr.RuleIndex == javaAntlr.JavaParserRULE_identifier {
 		values := getVariableValueFromTree(expr.Content, expr.Node)
 		if len(values) == 0 {
@@ -32,7 +31,7 @@ func getStrValueFromExpression(expr *Expression) []string {
 		}
 	} else if expr.RuleIndex == javaAntlr.JavaParserRULE_literal {
 		result := strings.Trim(expr.Content, "\"")
-		if result == "" {
+		if result == "" || result == "null" {
 			return results
 		}
 
@@ -164,7 +163,11 @@ func GetSqlsFromVisitor(ctx *JavaVisitor) []string {
 			// 参数为字符串
 		} else if arg.RuleIndex == javaAntlr.JavaParserRULE_literal {
 			// anltr为了区分字符串和其他变量，会为字符串的值左右添加双引号，获取sql时需要去除左右的双引号
-			sqls = append(sqls, strings.Trim(arg.Content, "\""))
+			sql := strings.Trim(arg.Content, "\"")
+			if sql == "null" || sql == "" {
+				continue
+			}
+			sqls = append(sqls, sql)
 			if arg.Symbol == PLUS {
 				tmpSlice := []string{}
 				nextSqls := getVariableValueFromTree(arg.Next.Content, expression.Node)
